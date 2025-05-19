@@ -1,11 +1,14 @@
 package com.url.shortener.service;
 
+import com.url.shortener.models.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @Data
 @NoArgsConstructor
@@ -40,5 +43,16 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public static UserDetailsImpl build(User user){
+        GrantedAuthority authority=new SimpleGrantedAuthority(user.getRole());
+        return new UserDetailsImpl(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                Collections.singletonList(authority)
+        );
     }
 }
